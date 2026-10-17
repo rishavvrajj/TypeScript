@@ -1,0 +1,15 @@
+{
+  "name": "typescript",
+  "version": "1.0.0",
+  "description": "TypeScript learning repository configuration",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --watch --project tsconfig.json"
+  },
+  "keywords": [],
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

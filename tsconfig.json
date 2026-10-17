@@ -1,0 +1,40 @@
+{
+  /*
+    TypeScript Compiler Options Configuration (tsconfig.json)
+    This file specifies the root files and the compiler options required to compile the TypeScript project.
+  */
+  "compilerOptions": {
+    // Specifies the ECMAScript target version for the generated JavaScript output.
+    "target": "es2022",
+
+    // Specifies the module system for the generated output.
+    "module": "es2022",
+
+    // Determines how modules get resolved from import paths (bundler mode aligns with modern bundlers).
+    "moduleResolution": "bundler",
+
+    // Enables all strict type-checking options, ensuring high type safety.
+    "strict": true,
+
+    // Adds undefined to any un-checked index signature type access (e.g., obj[key]).
+    "noUncheckedIndexedAccess": true,
+
+    // Distinguishes between undefined properties and missing optional properties.
+    "exactOptionalPropertyTypes": true,
+
+    // Ensures catch clause variables are typed as 'unknown' instead of 'any'.
+    "useUnknownInCatchVariables": true,
+
+    // Skips type checking of declaration files (.d.ts) from dependencies to speed up compilation.
+    "skipLibCheck": true,
+
+    // Specifies the root directory of input source files.
+    "rootDir": "src",
+
+    // Specifies the output directory for compiled JavaScript files.
+    "outDir": "dist"
+  },
+
+  // Specifies an array of filename or pattern globs that should be included in compilation.
+  "include": ["src"]
+}
