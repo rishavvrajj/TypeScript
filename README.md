@@ -1,14 +1,15 @@
-# TypeScript Essentials: From Scratch to Intermediate
+# TypeScript Essentials: From Scratch to Advanced
 
-Welcome to the **TypeScript Essentials** course repository! This codebase is structured as a clear, progressive, beginner-friendly course designed to take you from absolute basics to confident, type-safe TypeScript development.
+Welcome to the **TypeScript Essentials** course repository! This codebase is structured as a clear, progressive, book-like reference course designed to take you from absolute basics to confident, type-safe TypeScript development.
 
 ---
 
-## 📚 Course Overview & Learning Path
+## Course Overview & Learning Path
 
-The course is divided into 16 sequential modules, organized by topic in the `src/` directory. Each module contains an in-depth explanatory `README.md` and a runnable, well-commented TypeScript code example.
+The course is divided into **31 comprehensive modules**, organized by topic across 5 logical parts in the `src/` directory. Each module contains an in-depth explanatory `README.md` and a runnable, well-commented TypeScript code example.
 
-| Order | Module Folder | Topic | Description |
+### Part 1: Foundations & Primitives (Modules 01–07)
+| Module | Folder | Topic | Description |
 | :---: | :--- | :--- | :--- |
 | **01** | [`src/01-primitives`](src/01-primitives) | Primitives | `string`, `number`, `boolean`, `bigint`, `symbol`, `null`, `undefined` |
 | **02** | [`src/02-type-inference`](src/02-type-inference) | Type Inference | How TypeScript infers types and when to use explicit annotations |
@@ -17,6 +18,10 @@ The course is divided into 16 sequential modules, organized by topic in the `src
 | **05** | [`src/05-type-assertions`](src/05-type-assertions) | Type Assertions | Using `as`, non-null assertions `!`, and runtime type guards |
 | **06** | [`src/06-as-const`](src/06-as-const) | Const Assertions | Deep freezing with `as const` and deriving union types from arrays/objects |
 | **07** | [`src/07-special-types`](src/07-special-types) | Special Types | Top and bottom types: `any`, `unknown`, `void`, `never` |
+
+### Part 2: Complex Types, Functions & Interfaces (Modules 08–16)
+| Module | Folder | Topic | Description |
+| :---: | :--- | :--- | :--- |
 | **08** | [`src/08-unions`](src/08-unions) | Union Types | Combining types with `|` and narrowing with type guards |
 | **09** | [`src/09-intersections`](src/09-intersections) | Intersection Types | Combining types with `&` and composing object shapes |
 | **10** | [`src/10-arrays`](src/10-arrays) | Arrays | Typed arrays, union arrays, and readonly arrays |
@@ -27,9 +32,36 @@ The course is divided into 16 sequential modules, organized by topic in the `src
 | **15** | [`src/15-return-types`](src/15-return-types) | Return Types | Inferred and explicit function return types across code paths |
 | **16** | [`src/16-interfaces`](src/16-interfaces) | Interfaces | Object shapes, extending interfaces, declaration merging, and classes |
 
+### Part 3: Advanced Types, Type Aliases & Narrowing (Modules 17–24)
+| Module | Folder | Topic | Description |
+| :---: | :--- | :--- | :--- |
+| **17** | [`src/17-type-aliases`](src/17-type-aliases) | Type Aliases | Naming complex types, unions, primitives, and intersection types |
+| **18** | [`src/18-interface-vs-types`](src/18-interface-vs-types) | Interfaces vs. Type Aliases | Comparing capabilities, extensibility, and best practices |
+| **19** | [`src/19-index-signature`](src/19-index-signature) | Index Signatures | Dynamic key-value mappings and index signature types |
+| **20** | [`src/20-typeof`](src/20-typeof) | Typeof Operator | Runtime `typeof` narrowing vs. type-level `typeof` operator |
+| **21** | [`src/21-in-optional-nullish`](src/21-in-optional-nullish) | In Operator & Nullish | Property presence check (`in`), optional chaining (`?.`), and nullish coalescing (`??`/`??=`) |
+| **22** | [`src/22-generics`](src/22-generics) | Generics Basics | Reusable components with type parameters (`<T>`) |
+| **23** | [`src/23-generic-constraints`](src/23-generic-constraints) | Generic Constraints | Restricting type parameters using `extends` |
+| **24** | [`src/24-generics-get-props`](src/24-generics-get-props) | Keyof & Indexed Access | `keyof` operator and indexed access types (`T[K]`) |
+
+### Part 4: Utility Types & Async (Modules 25–28)
+| Module | Folder | Topic | Description |
+| :---: | :--- | :--- | :--- |
+| **25** | [`src/25-utils`](src/25-utils) | Built-in Object Utilities | `Partial`, `Required`, `Readonly`, `Pick`, `Omit`, `Record` |
+| **26** | [`src/26-function-utils`](src/26-function-utils) | Function & Constructor Utilities | `ReturnType`, `Parameters`, `ConstructorParameters`, `InstanceType` |
+| **27** | [`src/27-utils-helper`](src/27-utils-helper) | Conditional & Filtering Utilities | `Exclude`, `Extract`, `NonNullable` |
+| **28** | [`src/28-utils-awaited`](src/28-utils-awaited) | Async Promise Unwrapping | `Awaited<T>` for recursive promise resolution and async flows |
+
+### Part 5: Object-Oriented Programming & Classes (Modules 29–31)
+| Module | Folder | Topic | Description |
+| :---: | :--- | :--- | :--- |
+| **29** | [`src/29-class-constructor`](src/29-class-constructor) | Classes & Constructors | Class definitions, instance properties, methods, and parameter properties |
+| **30** | [`src/30-access-modifiers`](src/30-access-modifiers) | Access Modifiers | `public`, `private`, `protected`, `readonly`, and ES2022 private `#fields` |
+| **31** | [`src/31-getters-setters`](src/31-getters-setters) | Getters & Setters | Data validation, computed properties, unit conversion, and read-only accessors |
+
 ---
 
-## 🚀 How to Run the Examples
+## How to Run the Examples
 
 ### Prerequisites
 Make sure you have [Node.js](https://nodejs.org/) installed.
@@ -49,28 +81,13 @@ npm run build
 You can execute any compiled module:
 ```bash
 node dist/01-primitives/index.js
-node dist/02-type-inference/index.js
-node dist/03-literals/index.js
-node dist/04-objects/index.js
-node dist/05-type-assertions/index.js
-node dist/06-as-const/index.js
-node dist/07-special-types/index.js
-node dist/08-unions/index.js
-node dist/09-intersections/index.js
-node dist/10-arrays/index.js
-node dist/11-tuples/index.js
-node dist/12-parameters/index.js
-node dist/13-optional-defaults/index.js
-node dist/14-rest-parameters/index.js
-node dist/15-return-types/index.js
-node dist/16-interfaces/index.js
+# ... through ...
+node dist/31-getters-setters/index.js
 ```
-
-*(Note: Depending on how `tsconfig.json` preserves directory structure under `rootDir: "src"`, compiled files are output to `dist/01-primitives/index.js`, etc.)*
 
 ---
 
-## 🛠️ TypeScript Compiler Settings (`tsconfig.json`)
+## TypeScript Compiler Settings (tsconfig.json)
 This course runs under strict industry standards:
 - `"strict": true` (enables all strict type-checking options)
 - `"noUncheckedIndexedAccess": true`
@@ -79,7 +96,8 @@ This course runs under strict industry standards:
 
 ---
 
-## 💡 Suggested Practice Projects
-Once you complete all 16 modules, try building:
+## Suggested Practice Projects
+Once you complete all 31 modules, try building:
 1. **A CLI Task Manager**: Manage todos with categories, priorities (literal unions), and strict object shapes.
 2. **An API Response Parser**: Safely parse JSON API responses using runtime type guards (`v is Type`) and union states (`loading | success | error`).
+3. **An Object-Oriented Domain Model**: Implement a robust banking or e-commerce domain using classes, access modifiers, getters/setters, and generics.

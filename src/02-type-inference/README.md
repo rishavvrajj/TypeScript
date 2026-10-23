@@ -1,53 +1,73 @@
-# Module 02: Type Inference
+# Module 02: Type Inference and Annotations
 
-## Learning Objective
-Understand how TypeScript automatically detects types (`type inference`) and when to use explicit type annotations vs letting TypeScript do the work.
+## What the Topic Is
+Type inference is TypeScript's ability to automatically deduce the types of variables, return values, and expressions based on their assigned values without requiring explicit type annotations.
 
-## Target Audience
-Absolute beginners learning TypeScript.
+## Why It Matters
+Type inference reduces boilerplate while preserving full type safety. It allows you to write concise code while letting the TypeScript compiler track types behind the scenes.
 
-## Prerequisites
-- Completion of [Module 01: Primitives](../01-primitives/README.md).
-
----
-
-## Explanation in Simple Language
-TypeScript is smart. Even if you don't explicitly write `: string` or `: number` next to every variable, TypeScript looks at the initial value you assign and **infers** (guesses correctly) what type it is. This keeps your code clean while keeping type safety fully active.
-
----
-
-## Key Concepts & Rules
-1. **Implicit Inference**: `let count = 0;` tells TypeScript `count` is a `number`. Reassigning `count = "hello"` will trigger a type error.
-2. **Explicit Annotation**: Writing `const site: string = "example.com";` explicitly tells TypeScript the intended type.
-3. **Best Practice**: Let TypeScript infer types when the value is obvious; use explicit annotations for function signatures, complex objects, or variables that start empty.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-// Inferred as number
-let score = 95;
+// TypeScript Learning Example: Basic Type Inference and Annotations
+// This file demonstrates TypeScript's type inference capabilities and explicit type annotations
 
-// Explicit annotation
-let username: string = "Bob";
+// Basic type inference - TypeScript automatically infers the type
+let count = 0; // inferred as number
 
-// Union inference
-let maybeNumberOrString = Math.random() > 0.5 ? "Yes" : 42; // string | number
+// Explicit type annotation - useful when we want to be specific
+const site: string = "example.com";
+
+// Array type inference - TypeScript infers number[]
+const scores = [10, 20, 30];
+
+// Union types - a variable that can hold multiple types
+let maybe: string | number;
+
+// Type inference in action - TypeScript infers string | number
+maybe = Math.random() > 0.5 ? "Test" : 10;
+
+// Function with explicit parameter and return type annotations
+export function add(a: number, b: number): number {
+    return a + b;
+}
+
+// Calling the function and logging the result
+console.log(add(5, 5));
+
+// Demonstrating type safety - this would cause a TypeScript error:
+// maybe = {}; // Error: Type '{}' is not assignable to type 'string | number'.
+
+// Interface example for object typing
+interface User {
+    id: number;
+    name: string;
+    email?: string; // optional property
+}
+
+// Creating a user object with type inference
+const user: User = {
+    id: 1,
+    name: "Alice",
+    email: "alice@example.com"
+};
+
+console.log(`User: ${user.name}`);
 ```
 
----
+## How the Code Works Line by Line
+1. **Inference**: `let count = 0;` is automatically inferred as `number`.
+2. **Explicit Annotation**: `const site: string = ...` forces TypeScript to enforce string values.
+3. **Array Inference**: `scores` is inferred as `number[]`.
+4. **Union Assignment**: `maybe` can hold either a `string` or a `number`.
+5. **Functions**: `add` explicitly types parameters and return values as `number`.
+6. **Interfaces**: `User` defines an object contract with an optional `email`.
 
-## Common Mistakes
-- **Over-annotating**: Writing `: number` on every single variable (`let x: number = 5;`) which creates unnecessary noise.
-- **Forgetting Type Widening on `let` vs `const`**: `let` variables widen to general types, whereas `const` primitives stay as exact literal types.
+## Expected Output
+```text
+10
+User: Alice
+```
 
----
-
-## Practice Exercises
-1. Create a variable without explicit type annotation, assign a boolean to it, and try reassigning a number. Observe the compiler error.
-2. Write a function with explicit parameter and return types that adds two numbers.
-
----
-
-## Next Topic
-Proceed to [Module 03: Literals](../03-literals/README.md).
+## Common Mistakes & Anti-Patterns
+- Over-annotating every single local variable where inference already provides the exact correct type.
+- Forgetting to annotate function parameters and public return types, leading to implicit `any` errors when strict mode is active.

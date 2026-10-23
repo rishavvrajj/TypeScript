@@ -1,47 +1,82 @@
 # Module 13: Optional and Default Parameters
 
-## Learning Objective
-Master optional parameters (`?`), default parameter values (`=`), and handling optional object properties with nullish coalescing (`??`).
+## What the Topic Is
+Handling optional function parameters (`?`), default parameter values (`=`), and optional object properties with nullish coalescing (`??`).
 
-## Target Audience
-Developers building flexible, user-friendly APIs and component configurations.
+## Why It Matters
+Flexible APIs often allow callers to omit certain arguments or configuration fields. Optional and default parameters let you provide robust fallbacks cleanly.
 
-## Prerequisites
-- Completion of [Module 12: Parameter and Return Type Annotations](../12-param-annotation/README.md).
-
----
-
-## Explanation in Simple Language
-Not all function arguments are required every time. TypeScript lets you mark parameters or object properties as **optional** using `?` or provide **default fallback values** using `=`. This makes your functions versatile while maintaining strict type safety.
-
----
-
-## Key Concepts & Rules
-1. **Optional Parameters (`?`)**: Can be provided or omitted (`name?: string`). Omitted parameters evaluate to `undefined`.
-2. **Default Parameters (`=`)**: Automatically assigns a fallback value if the argument is omitted or `undefined`.
-3. **Nullish Coalescing (`??`)**: Safely provides fallback values when dealing with `null` or `undefined`.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-function connect(host: string, port: number = 3000): string {
-    return `Connecting to ${host}:${port}`;
+// TypeScript Learning Example: Optional and Default Parameters
+// This file demonstrates how to handle optional parameters (`?`) and default parameter values (`=`).
+
+export { };
+
+// 1. Optional Parameters (`?`)
+// An optional parameter can be provided or omitted. When omitted, its value is `undefined`.
+function greetOptional(name?: string): string {
+    // We must check if `name` is undefined before calling string methods on it
+    const displayName = name ? name.toUpperCase() : "GUEST";
+    return `Hello, ${displayName}!`;
 }
+
+console.log(greetOptional("rishav")); // Hello, RISHAV!
+console.log(greetOptional());         // Hello, GUEST!
+
+// 2. Default Parameters (`=`)
+// A default parameter automatically assigns a fallback value if the argument is omitted or `undefined`.
+function greetDefault(name: string = "Guest"): string {
+    return `Hello, ${name.toUpperCase()}!`;
+}
+
+console.log(greetDefault("rishav")); // Hello, RISHAV!
+console.log(greetDefault());         // Hello, GUEST!
+
+// 3. Combining Multiple Optional and Default Parameters
+function connect(host: string, port: number = 3000, secure: boolean = false): string {
+    return `Connecting to ${host} on port ${port} [Secure: ${secure}]`;
+}
+
+console.log(connect("localhost"));                     // Connecting to localhost on port 3000 [Secure: false]
+console.log(connect("api.example.com", 8080, true));   // Connecting to api.example.com on port 8080 [Secure: true]
+
+// 4. Optional Properties in Object Types
+// Optional properties (`?`) can also be defined on object types and interfaces.
+type ServerConfig = {
+    host: string;
+    port?: number; // Optional property
+    timeout?: number; // Optional property
+};
+
+function startServer(config: ServerConfig): void {
+    // Using the nullish coalescing operator (??) to provide fallback values
+    const port = config.port ?? 8080;
+    const timeout = config.timeout ?? 30;
+
+    console.log(`Starting server on ${config.host}:${port} with timeout ${timeout}s`);
+}
+
+startServer({ host: "127.0.0.1" });
+startServer({ host: "0.0.0.0", port: 5000, timeout: 60 });
 ```
 
----
+## How the Code Works Line by Line
+1. **Optional Parameters (`?`)**: `name?: string` results in `name` being `string | undefined`.
+2. **Default Parameters (`=`)**: `name: string = "Guest"` automatically fills in `"Guest"` if undefined.
+3. **Nullish Coalescing (`??`)**: `config.port ?? 8080` falls back to `8080` if `port` is null or undefined.
 
-## Common Mistakes
-- Placing required parameters after optional parameters (TypeScript requires optional parameters to come last).
+## Expected Output
+```text
+Hello, RISHAV!
+Hello, GUEST!
+Hello, RISHAV!
+Hello, GUEST!
+Connecting to localhost on port 3000 [Secure: false]
+Connecting to api.example.com on port 8080 [Secure: true]
+Starting server on 127.0.0.1:8080 with timeout 30s
+Starting server on 0.0.0.0:5000 with timeout 60s
+```
 
----
-
-## Practice Exercises
-1. Write a greeting function with an optional title parameter.
-2. Create an object type for database configuration with optional timeout and port fields, and use `??` to set defaults.
-
----
-
-## Next Topic
-Proceed to [Module 14: Rest Parameters and Tuples](../14-rest-tuple/README.md).
+## Common Mistakes & Anti-Patterns
+- Using logical OR (`||`) instead of nullish coalescing (`??`) for numerical settings where `0` is a valid configured value.

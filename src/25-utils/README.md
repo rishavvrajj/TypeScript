@@ -1,51 +1,125 @@
-# Module 25: Built-in Utility Types
+# Module 25: Built-in Object Utility Types
 
-## Learning Objective
-Master TypeScript's powerful built-in utility types (`Partial<T>`, `Required<T>`, `Readonly<T>`, `Pick<T, K>`, `Omit<T, K>`, and `Record<K, T>`) for transforming and manipulating object types without duplication.
+## What the Topic Is
+Using TypeScript's core built-in utility types: `Partial<T>`, `Required<T>`, `Readonly<T>`, `Pick<T, K>`, `Omit<T, K>`, and `Record<K, V>`.
 
-## Target Audience
-Developers building robust TypeScript applications who want to avoid redundant type definitions and leverage TypeScript's type transformations.
+## Why It Matters
+Utility types transform existing types cleanly without duplicating code, keeping domain models DRY and maintainable.
 
-## Prerequisites
-- Completion of [Module 24: Generic Property Accessors](../24-generics-getProps/README.md).
-
----
-
-## Explanation in Simple Language
-TypeScript provides built-in generic utility types that act as "type functions" to take existing types and transform them in common ways:
-- **`Partial<T>`**: Turns all properties of `T` into optional (`?`).
-- **`Required<T>`**: Turns all optional properties of `T` into required.
-- **`Readonly<T>`**: Prevents mutation by making all properties read-only.
-- **`Pick<T, K>`**: Keeps only the specified keys `K` from `T`.
-- **`Omit<T, K>`**: Removes the specified keys `K` from `T`.
-- **`Record<K, T>`**: Creates a dictionary/lookup map where keys are of type `K` and values are of type `T`.
-
----
-
-## Key Concepts & Rules
-1. **`Partial<T>`**: Essential for patch/update payloads.
-2. **`Pick<T, K>` vs `Omit<T, K>`**: `Pick` includes only listed keys; `Omit` excludes listed keys.
-3. **`Record<K, T>`**: Perfect for lookup tables, dictionaries, or state maps.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-type User = { id: string; name: string; email?: string };
+// TypeScript Learning Example: Built-in Utility Types
+// This file demonstrates how to use TypeScript's core built-in utility types:
+// Partial<T>, Required<T>, Readonly<T>, Pick<T, K>, Omit<T, K>, and Record<K, V>.
 
-type UserPreview = Pick<User, "id" | "name">;
-type CreateUserPayload = Omit<User, "id">;
-type UserRolesRecord = Record<string, "Admin" | "User">;
+export {};
+
+type Address = {
+    line1: string;
+    city: string;
+};
+
+type User = {
+    id: string;
+    name: string;
+    email?: string;
+    address: Address;
+};
+
+// 1. Partial<T>
+// Makes all properties of type `T` optional (`?`). Ideal for patch / update payloads.
+type UserPatch = Partial<User>;
+
+const patch1: UserPatch = {
+    name: "Rishav",
+};
+
+const patch2: UserPatch = {
+    address: { line1: "123 Main St", city: "Seattle" }
+};
+
+console.log("Partial patch created successfully");
+
+// 2. Required<T>
+// Makes all properties of type `T` required (removing any optional `?` modifiers).
+type RequiredUser = Required<User>;
+
+const completeUser: RequiredUser = {
+    id: "usr_01",
+    name: "Sangam",
+    email: "sangam@example.com",
+    address: { line1: "456 Market St", city: "San Francisco" }
+};
+
+console.log(`Required user email: ${completeUser.email}`);
+
+// 3. Readonly<T>
+// Makes all properties of type `T` immutable (read-only).
+type ReadonlyUser = Readonly<User>;
+
+const readonlyUser: ReadonlyUser = {
+    id: "usr_02",
+    name: "Alice",
+    address: { line1: "789 Pine St", city: "Portland" }
+};
+
+// readonlyUser.name = "Bob"; // Error: Cannot assign to 'name' because it is a read-only property
+console.log(`Readonly user name: ${readonlyUser.name}`);
+
+// 4. Pick<T, K>
+// Constructs a type by picking the set of properties `K` from `T`.
+type UserBasicInfo = Pick<User, "id" | "name">;
+
+const basicInfo: UserBasicInfo = {
+    id: "usr_03",
+    name: "Charlie",
+};
+
+console.log(`Picked User - ID: ${basicInfo.id}, Name: ${basicInfo.name}`);
+
+// 5. Omit<T, K>
+// Constructs a type by picking all properties from `T` and then removing `K`.
+type UserWithoutId = Omit<User, "id">;
+
+const newUser: UserWithoutId = {
+    name: "Diana",
+    email: "diana@example.com",
+    address: { line1: "321 Oak St", city: "Austin" }
+};
+
+console.log(`Omitted ID user name: ${newUser.name}`);
+
+// 6. Record<K, V>
+// Constructs an object type whose property keys are `K` and whose property values are `V`.
+// Excellent for lookup tables and dictionaries.
+type Role = "Admin" | "User" | "Editor";
+type RoleDirectory = Record<Role, User>;
+
+const directory: RoleDirectory = {
+    Admin: { id: "u1", name: "Admin Boss", address: { line1: "HQ", city: "New York" } },
+    User: { id: "u2", name: "Regular User", address: { line1: "Suburbs", city: "Denver" } },
+    Editor: { id: "u3", name: "Content Editor", address: { line1: "Studio", city: "Chicago" } },
+};
+
+console.log(`Admin in directory: ${directory.Admin.name}`);
 ```
 
----
+## How the Code Works Line by Line
+1. **`Partial<T>`**: Makes all properties optional.
+2. **`Required<T>`**: Makes all properties required.
+3. **`Readonly<T>`**: Freezes properties.
+4. **`Pick<T, K>` & `Omit<T, K>`**: Subsets object shapes.
+5. **`Record<K, V>`**: Creates lookup dictionaries.
 
-## Common Mistakes
-- Trying to modify properties on a `Readonly<T>` type object.
-- Forgetting that `Partial<T>` makes every property optional, requiring undefined/optional checks when reading them.
+## Expected Output
+```text
+Partial patch created successfully
+Required user email: sangam@example.com
+Readonly user name: Alice
+Picked User - ID: usr_03, Name: Charlie
+Omitted ID user name: Diana
+Admin in directory: Admin Boss
+```
 
----
-
-## Practice Exercises
-1. Given a `Product` type, use `Omit` to create a `NewProduct` type that excludes an `id` field.
-2. Use `Record` to create a dictionary mapping category names (`"tech" | "clothing" | "food"`) to array of product IDs.
+## Common Mistakes & Anti-Patterns
+- Duplicating object types manually instead of leveraging built-in utility types (`Partial`, `Pick`, `Omit`, etc.).

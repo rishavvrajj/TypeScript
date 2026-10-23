@@ -1,55 +1,95 @@
 # Module 17: Type Aliases
 
-## Learning Objective
-Master TypeScript type aliases (`type`) for giving descriptive names to any TypeScript type, including object shapes, union types, primitives, and intersection types.
+## What the Topic Is
+Type aliases (`type`) give descriptive names to any TypeScript type, including primitives, object shapes, union types, and intersections.
 
-## Target Audience
-Developers building flexible, well-typed data models and utility types in TypeScript.
+## Why It Matters
+Type aliases provide flexibility by allowing you to name complex union types, primitives, and tuples that interfaces cannot represent directly.
 
-## Prerequisites
-- Completion of [Module 16: Interfaces](../16-interfaces/README.md).
-
----
-
-## Explanation in Simple Language
-A **Type Alias** is a way to give a name to a type (`type MyName = string;` or `type User = { id: string; name: string; }`). Unlike interfaces, type aliases can represent primitives, union types, tuples, and any complex type combination using intersections (`&`).
-
----
-
-## Key Concepts & Rules
-1. **Basic Type Aliases**: `type ID = string | number;`
-2. **Object Shapes**: `type User = { id: string; name: string; }`
-3. **Union Types**: `type Status = "pending" | "approved" | "rejected";`
-4. **Intersections (`&`)**: Combining multiple types into one `type AdminUser = User & Permissions;`
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-type Point = {
-    x: number;
-    y: number;
+// TypeScript Learning Example: Type Aliases
+// This file demonstrates how to define and use type aliases (`type`) for primitives, object shapes, unions, and intersections.
+
+export {};
+
+// 1. Basic Type Aliases (Primitives and Aliasing)
+// Type aliases can name any type, including primitives, unions, and tuples.
+type UserID = string | number;
+type Username = string;
+
+const userId: UserID = "usr_12345";
+const userName: Username = "Alice";
+
+console.log(`User ${userName} has ID: ${userId}`);
+
+// 2. Object Shapes with Type Aliases
+// Type aliases are commonly used to define the shape of objects.
+type Person = {
+    id: string;
+    address: string;
+    salary: number;
+    email?: string; // Optional property
 };
 
-type Printable = {
-    print(): void;
+const person: Person = {
+    id: "1",
+    address: "123 Main St",
+    salary: 123450
 };
 
-type PrintablePoint = Point & Printable;
+console.log(`Person ${person.id} lives at ${person.address} with salary ${person.salary}`);
+
+// 3. Union Types with Type Aliases
+// Type aliases excel at giving readable names to complex union types.
+type Status = 'new' | 'paid' | 'pending';
+
+function nextActionCheck(status: Status): string {
+    switch (status) {
+        case "new":
+            return 'Initialize processing';
+        case "paid":
+            return 'Fulfill order';
+        case "pending":
+            return 'Wait for payment confirmation';
+        default:
+            return 'Unknown action';
+    }
+}
+
+console.log(nextActionCheck("paid"));
+
+// 4. Intersection Types (`&`) for Composition
+// Type aliases can combine multiple types using intersection (`&`).
+type ToMerge = { price: number };
+type ToMerge2 = { stock: number };
+
+type MergedProductInfo = Person & ToMerge & ToMerge2;
+
+const productInfo: MergedProductInfo = {
+    id: "prod-99",
+    address: "Warehouse A",
+    salary: 5000,
+    price: 99.99,
+    stock: 250
+};
+
+console.log(`Product ${productInfo.id}: Price $${productInfo.price}, Stock ${productInfo.stock}`);
 ```
 
----
+## How the Code Works Line by Line
+1. **Primitive Aliasing**: `type UserID = string | number` creates a custom alias for a union.
+2. **Object Shapes**: `type Person` defines an object contract.
+3. **Union Aliasing**: `type Status` defines allowed literal string states.
+4. **Intersections**: `Person & ToMerge & ToMerge2` combines multiple object types.
 
-## Common Mistakes
-- Expecting type aliases to support declaration merging or `extends` clauses like interfaces. (Use intersections `&` or unions instead).
+## Expected Output
+```text
+User Alice has ID: usr_12345
+Person 1 lives at 123 Main St with salary 123450
+Fulfill order
+Product prod-99: Price $99.99, Stock 250
+```
 
----
-
-## Practice Exercises
-1. Create a type alias for a product with ID, name, price, and category.
-2. Define a union type alias for user roles (`"admin" | "editor" | "viewer"`).
-
----
-
-## Course Conclusion
-You have successfully explored type aliases in TypeScript!
+## Common Mistakes & Anti-Patterns
+- Expecting type aliases to support declaration merging like interfaces.

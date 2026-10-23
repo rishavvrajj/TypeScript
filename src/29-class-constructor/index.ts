@@ -53,13 +53,13 @@ console.log(item.displayInfo());
 
 // 3. Common Pitfalls / Anti-patterns (Demonstrated via comments)
 /*
-// ❌ Bad Example 1: Uninitialized property without type annotation or initializer
+// Bad Example 1: Uninitialized property without type annotation or initializer
 class BadExample {
     a: string; // Error: Property 'a' has no initializer and is not definitely assigned in the constructor.
     constructor() {}
 }
 
-// ❌ Bad Example 2: Missing property declaration in class body
+// Bad Example 2: Missing property declaration in class body
 class AlsoBadExample {
     constructor() {
         this.a = "test"; // Error: Property 'a' does not exist on type 'AlsoBadExample'.

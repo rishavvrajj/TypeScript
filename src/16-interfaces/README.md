@@ -1,57 +1,107 @@
 # Module 16: Interfaces
 
-## Learning Objective
-Master TypeScript interfaces (`interface`) for defining object shapes, extending types, implementing classes, and leveraging declaration merging.
+## What the Topic Is
+Defining object shapes with `interface`, extending interfaces (`extends`), declaration merging, and implementing interfaces in classes.
 
-## Target Audience
-Developers building object-oriented and extensible architectures in TypeScript.
+## Why It Matters
+Interfaces provide clean, extensible contracts for object structures and classes, supporting declaration merging for library augmentations.
 
-## Prerequisites
-- Completion of [Module 15: Function Return Types](../15-return-type/README.md).
-
----
-
-## ExplanationIn Simple Language
-An **Interface** is a powerful way to define the "shape" of an object in TypeScript. While very similar to type aliases (`type`), interfaces support **inheritance** (`extends`), **class implementation** (`implements`), and **declaration merging** (automatically combining multiple declarations with the same name).
-
----
-
-## Key Concepts & Rules
-1. **Interface Definition**: `interface User { id: string; name: string; }`
-2. **Extending Interfaces**: `interface Admin extends User { permissions: string[]; }`
-3. **Declaration Merging**: Defining two interfaces with the same name merges their properties (unique to interfaces).
-4. **Implementing in Classes**: `class ConsoleLogger implements Logger { ... }`
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-interface Animal {
+// TypeScript Learning Example: Interfaces
+// This file demonstrates how to define object shapes, extend interfaces, implement classes, and merge declarations using `interface`.
+
+export {};
+
+// 1. Basic Interface Definition
+// Interfaces are another way to define object shapes, very similar to type aliases (`type`).
+interface User {
+    id: string;
     name: string;
+    email?: string; // Optional property
+    readonly createdAt: Date; // Readonly property
 }
 
-interface Dog extends Animal {
-    bark(): void;
-}
-
-const myDog: Dog = {
-    name: "Rex",
-    bark() { console.log("Woof!"); }
+const alice: User = {
+    id: "u-1",
+    name: "Alice Smith",
+    email: "alice@example.com",
+    createdAt: new Date()
 };
+
+console.log(`User: ${alice.name} (${alice.email})`);
+
+// 2. Extending Interfaces (`extends`)
+// Unlike type aliases (which use intersection `&`), interfaces can extend other interfaces cleanly.
+interface Admin extends User {
+    permissions: string[];
+    superAdminLevel: number;
+}
+
+const adminUser: Admin = {
+    id: "a-1",
+    name: "Bob Admin",
+    createdAt: new Date(),
+    permissions: ["read", "write", "delete"],
+    superAdminLevel: 5
+};
+
+console.log(`Admin ${adminUser.name} has level ${adminUser.superAdminLevel} access.`);
+
+// 3. Declaration Merging (Unique to Interfaces)
+// If you define two interfaces with the same name in the same scope, TypeScript automatically merges them!
+interface Settings {
+    theme: "light" | "dark";
+}
+
+interface Settings {
+    debugMode: boolean;
+}
+
+// The merged Settings interface now requires BOTH theme and debugMode
+const appSettings: Settings = {
+    theme: "dark",
+    debugMode: true
+};
+
+console.log(`Settings -> Theme: ${appSettings.theme}, Debug: ${appSettings.debugMode}`);
+
+// 4. Implementing Interfaces in Classes
+// Classes can implement interfaces to guarantee they adhere to a specific shape.
+interface Logger {
+    log(message: string): void;
+    error(message: string): void;
+}
+
+class ConsoleLogger implements Logger {
+    log(message: string): void {
+        console.log(`[INFO]: ${message}`);
+    }
+
+    error(message: string): void {
+        console.error(`[ERROR]: ${message}`);
+    }
+}
+
+const logger = new ConsoleLogger();
+logger.log("Application started successfully.");
+logger.error("Database connection timeout.");
 ```
 
----
+## How the Code Works Line by Line
+1. **Basic Interface**: `interface User` defines required and optional properties.
+2. **Interface Extension**: `interface Admin extends User` inherits properties.
+3. **Declaration Merging**: Two `Settings` declarations merge into one combined shape.
+4. **Class Implementation**: `class ConsoleLogger implements Logger` guarantees adherence to `Logger`.
 
-## Common Mistakes
-- Using intersection (`&`) where interface extension (`extends`) is cleaner and produces better error messages.
+## Expected Output
+```text
+User: Alice Smith (alice@example.com)
+Admin Bob Admin has level 5 access.
+Settings -> Theme: dark, Debug: true
+[INFO]: Application started successfully.
+[ERROR]: Database connection timeout.
+```
 
----
-
-## Practice Exercises
-1. Define an `Employee` interface extending a base `Person` interface.
-2. Create a class that implements a custom `Repository` interface.
-
----
-
-## Course Conclusion
-Congratulations on completing the TypeScript Essentials course!
+## Common Mistakes & Anti-Patterns
+- Attempting to use interfaces for primitive type aliases or union types (e.g., `interface ID = string | number` is invalid; use `type ID = ...` instead).

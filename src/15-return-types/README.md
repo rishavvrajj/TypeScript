@@ -1,48 +1,66 @@
-# Module 15: Function Return Types
+# Module 15: Return Types
 
-## Learning Objective
-Understand how TypeScript infers function return types and why explicit return type annotations are essential for robust APIs.
+## What the Topic Is
+Inferred and explicit function return types, multiple return paths, asynchronous promises, and why explicit return annotations matter.
 
-## Target Audience
-Developers writing maintainable and scalable TypeScript codebases.
+## Why It Matters
+Explicit return type annotations serve as documentation, protect against accidental signature changes, and ensure functions return what callers expect.
 
-## Prerequisites
-- Completion of [Module 14: Rest Parameters and Tuples](../14-rest-tuple/README.md).
-
----
-
-## Explanation in Simple Language
-When a function runs, it produces a result. TypeScript can **infer** what type of value a function returns based on its `return` statements. However, for exported functions and public APIs, explicitly annotating return types acts as documentation and protects against accidental code regressions.
-
----
-
-## Key Concepts & Rules
-1. **Inferred Return Types**: TypeScript deduces return type automatically.
-2. **Explicit Annotations**: `function getUser(): User { ... }`
-3. **Multiple Return Paths**: TypeScript verifies that all return branches match the declared return type.
-4. **Async Functions**: Asynchronous functions automatically wrap return values in `Promise<T>`.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-async function fetchStatus(): Promise<string> {
-    return "OK";
+// TypeScript Learning Example: Function Return Types
+// This file demonstrates how TypeScript infers or requires explicit return types on functions.
+
+export {};
+
+// 1. Inferred Return Types
+// TypeScript can automatically deduce what a function returns based on its return statements.
+const double = (n: number) => n * 2; // TypeScript infers return type is number
+
+export function formatGreeting(name: string): string {
+    return `Hello, ${name}!`;
 }
+
+// 2. Multiple Return Paths
+// TypeScript checks all return paths to ensure they match the declared return type.
+function booleanToNumber(flag: boolean): number {
+    if (flag) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+console.log(booleanToNumber(true));  // 1
+console.log(booleanToNumber(false)); // 0
+
+// 3. Asynchronous Functions and Promises
+// Async functions always wrap their return value in a Promise.
+async function fetchUserCount(): Promise<string> {
+    // Simulating async operation
+    return "42";
+}
+
+fetchUserCount().then(count => console.log(`Fetched count: ${count}`));
+
+// 4. Why Explicit Return Types Matter
+// While TypeScript can infer return types, adding explicit annotations on exported or public APIs:
+// - Acts as documentation for other developers.
+// - Prevents accidental changes to return structures.
+// - Catches bugs early if a function's implementation changes unexpectedly.
 ```
 
----
+## How the Code Works Line by Line
+1. **Inference**: `double` has its return type inferred automatically.
+2. **Explicit Annotations**: `formatGreeting` explicitly declares `: string`.
+3. **Async Functions**: `fetchUserCount` returns a `Promise<string>`.
 
-## Common Mistakes
-- Forgetting that an async function without an explicit return type annotation returns `Promise<any>` or `Promise<unknown>` if not careful, though usually inferred as `Promise<T>`.
+## Expected Output
+```text
+1
+0
+Fetched count: 42
+```
 
----
-
-## Practice Exercises
-1. Write a function with multiple return paths that returns a string or number based on a boolean flag, with an explicit return type.
-2. Create an async function returning a typed object promise.
-
----
-
-## Next Topic
-Proceed to [Module 16: Interfaces](../16-interfaces/README.md).
+## Common Mistakes & Anti-Patterns
+- Omitting explicit return type annotations on public library functions or exported modules, leading to fragile API contracts if internal implementations change.

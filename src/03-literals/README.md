@@ -1,52 +1,91 @@
 # Module 03: Literal Types
 
-## Learning Objective
-Master literal types and string/numeric literal unions to restrict variables and function parameters to exact, specific values.
+## What the Topic Is
+Literal types allow you to specify exact, precise values (such as specific strings, numbers, or booleans) that a variable or parameter can hold, rather than broad types like `string` or `number`.
 
-## Target Audience
-Beginners learning TypeScript.
+## Why It Matters
+Literal types power state management, configuration flags, and discriminated unions, ensuring that only valid, predefined values can be passed into functions or stored in states.
 
-## Prerequisites
-- Completion of [Module 02: Type Inference](../02-type-inference/README.md).
-
----
-
-## Explanation in Simple Language
-A **literal** is a more concrete subtype of a collective type. Instead of saying a variable can be *any* string, a literal type says it can only be **one specific string** (like `"up"`). When combined with union operators (`|`), literal types become a powerful tool for creating strict states, configurations, and options.
-
----
-
-## Key Concepts & Rules
-1. **String Literals**: `type Status = "pending" | "approved" | "rejected";`
-2. **Numeric Literals**: `type Dice = 1 | 2 | 3 | 4 | 5 | 6;`
-3. **Discriminated Unions**: Combining literal property tags with object types for bulletproof state management.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
+// TypeScript Learning Example: Literal Types
+// This file demonstrates literal types, string literal unions, numeric literals, and boolean literals.
+
+export {};
+
+// 1. String Literal Types
+// Instead of accepting any string, we can restrict a variable or parameter to exact string values.
 type Direction = "left" | "right" | "up" | "down";
 
-function move(d: Direction) {
-    console.log(d);
+function move(d: Direction): void {
+    console.log(`Moving in direction: ${d}`);
 }
 
-move("left"); // Valid
-// move("backward"); // Error!
+// Valid usage with exact literal value
+move("left");
+
+const myDirection = "right"; // Inferred as string, but TypeScript allows const context or literal assignment
+move(myDirection);
+
+// Using explicit type annotation
+let customDir: Direction = "up";
+move(customDir);
+
+// Invalid usage (will cause a TypeScript compile error):
+// move("backward"); // Error: Argument of type '"backward"' is not assignable to parameter of type 'Direction'.
+
+// 2. Numeric Literal Types
+// Restricting values to specific numbers.
+type DiceRoll = 1 | 2 | 3 | 4 | 5 | 6;
+
+function rollDice(roll: DiceRoll): void {
+    console.log(`Rolled a: ${roll}`);
+}
+
+rollDice(6); // Valid
+// rollDice(7); // Error: Argument of type '7' is not assignable to parameter of type 'DiceRoll'.
+
+// 3. Boolean Literal Types
+type TrueOrFalse = true; // Useful in advanced type programming and conditional types
+const alwaysTrue: TrueOrFalse = true;
+
+// 4. Combining Literals in Union Types for State Management
+type LoadingState = { status: "loading" };
+type SuccessState = { status: "success"; data: string };
+type ErrorState = { status: "error"; error: string };
+
+type NetworkState = LoadingState | SuccessState | ErrorState;
+
+function handleNetworkResponse(state: NetworkState): string {
+    // Discriminated unions using literal property 'status'
+    switch (state.status) {
+        case "loading":
+            return "Loading data...";
+        case "success":
+            return `Success! Data: ${state.data}`;
+        case "error":
+            return `Failed! Error: ${state.error}`;
+    }
+}
+
+const currentState: NetworkState = { status: "success", data: "User Profile Loaded" };
+console.log(handleNetworkResponse(currentState));
 ```
 
----
+## How the Code Works Line by Line
+1. **String Literals**: `Direction` restricts strings to `"left"`, `"right"`, `"up"`, or `"down"`.
+2. **Numeric Literals**: `DiceRoll` restricts numbers to `1 | 2 | 3 | 4 | 5 | 6`.
+3. **Discriminated Unions**: `NetworkState` uses the literal property `status` to differentiate between loading, success, and error states safely in a `switch` statement.
 
-## Common Mistakes
-- **Mutating `let` variables**: Assigning a literal to a `let` variable can widen its type to `string` unless annotated or marked with `as const`.
+## Expected Output
+```text
+Moving in direction: left
+Moving in direction: right
+Moving in direction: up
+Rolled a: 6
+Success! Data: User Profile Loaded
+```
 
----
-
-## Practice Exercises
-1. Define a literal union type for HTTP methods (`"GET" | "POST" | "PUT" | "DELETE"`).
-2. Write a function that accepts this HTTP method type and logs a mock request message.
-
----
-
-## Next Topic
-Proceed to [Module 04: Objects](../04-objects/README.md).
+## Common Mistakes & Anti-Patterns
+- Passing a general `string` variable into a function expecting a strict string literal union without widening or type casting.
+- Forgetting a case in a discriminated union switch statement.

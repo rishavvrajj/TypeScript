@@ -1,52 +1,99 @@
 # Module 30: Class Access Modifiers and Encapsulation
 
-## Learning Objective
-Master TypeScript access modifiers (`public`, `private`, `protected`, `readonly`) and ECMAScript private fields (`#`) to enforce encapsulation, data hiding, and object safety.
+## What the Topic Is
+TypeScript access modifiers (`public`, `private`, `protected`, `readonly`) and ECMAScript private fields (`#private`) for enforcing encapsulation and object safety.
 
-## Target Audience
-Developers building robust, encapsulated object-oriented architectures and domain models in TypeScript.
+## Why It Matters
+Encapsulation hides internal state and exposes clean public interfaces, preventing unauthorized external tampering with object internals.
 
-## Prerequisites
-- Completion of [Module 29: Classes and Constructors](../29-class-constructor/README.md).
-
----
-
-## Explanation in Simple Language
-Encapsulation is the practice of hiding internal implementation details and exposing only a clean public interface:
-- **`public`**: The default modifier. Members can be accessed from anywhere.
-- **`private`**: Members can only be accessed inside the class where they are defined (enforced at compile-time by TypeScript).
-- **`#private` (ECMAScript Private Fields)**: Enforced at runtime by JavaScript engines, offering true private encapsulation.
-- **`protected`**: Members can be accessed inside the class and by any subclasses (child classes), but not from outside instances.
-- **`readonly`**: Prevents property modification after the constructor finishes executing.
-
----
-
-## Key Concepts & Rules
-1. **Compile-time vs Runtime Privacy**: TypeScript's `private` is a compile-time check (compiled away to normal JS properties), whereas `#field` is true runtime privacy.
-2. **Subclass Inheritance**: `protected` allows child classes to access parent properties while blocking external access.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
+// TypeScript Learning Example: Class Access Modifiers and Encapsulation
+// This file demonstrates public, private, protected, readonly modifiers, and ES2022 private fields (#).
+
+export {};
+
+// 1. Access Modifiers: `public`, `private`, and ES Private Fields (`#`)
 class BankAccount {
+    // `public` is the default; accessible anywhere
     public owner: string;
-    private balance: number = 0;
-    #pin: number = 1234; // Runtime private
+
+    // `private` is enforced by TypeScript at compile-time
+    private balance = 0;
+
+    // `#otp` is a true JavaScript runtime private field (ECMAScript private identifier)
+    #otp = 123456;
 
     constructor(owner: string) {
         this.owner = owner;
     }
+
+    deposit(amount: number): void {
+        if (amount <= 0) {
+            throw new Error('Deposit amount must be positive');
+        }
+        this.balance += amount;
+    }
+
+    getBalance(): number {
+        return this.balance;
+    }
+
+    verifyOtp(code: number): boolean {
+        return this.#otp === code; // Only accessible inside this class
+    }
 }
+
+const acc = new BankAccount('Alice');
+acc.deposit(50000);
+console.log(`Account Balance: ${acc.getBalance()}`); // Fixed missing parentheses ()
+
+// acc.balance; // Error: Property 'balance' is private and only accessible within class 'BankAccount'.
+// acc.#otp;    // Error: Property '#otp' is not accessible outside class 'BankAccount' because it has a private identifier.
+
+// 2. `protected` Modifier and Inheritance
+// `protected` allows members to be accessed within the class itself and any subclasses (derived classes).
+class Animal {
+    protected energy = 50;
+
+    eat(amount: number): void {
+        this.energy = Math.min(100, this.energy + amount);
+        console.log(`Animal ate. Current energy: ${this.energy}`);
+    }
+}
+
+class Dog extends Animal {
+    run(): void {
+        this.energy -= 15;
+        console.log(`Dog ran. Energy dropped to: ${this.energy}`);
+    }
+
+    getStatus(): number {
+        return this.energy; // Child class can access protected member `energy`
+    }
+}
+
+const myDog = new Dog();
+myDog.eat(20);
+myDog.run();
+console.log(`Dog final energy status: ${myDog.getStatus()}`);
+
+// myDog.energy; // Error: Property 'energy' is protected and only accessible within class 'Animal' and its subclasses.
 ```
 
----
+## How the Code Works Line by Line
+1. **`public`**: Default visibility, accessible anywhere.
+2. **`private`**: Compile-time privacy enforced by TypeScript.
+3. **`#otp`**: Runtime private field enforced by the JS engine.
+4. **`protected`**: Accessible in class and subclasses.
 
-## Common Mistakes
-- Relying solely on TypeScript's `private` modifier for highly sensitive data when compiled to plain JS (where private properties can still be accessed if type-checking is bypassed). Use `#private` for true runtime privacy.
+## Expected Output
+```text
+Account Balance: 50000
+Animal ate. Current energy: 70
+Dog ran. Energy dropped to: 55
+Dog final energy status: 55
+```
 
----
-
-## Practice Exercises
-1. Create a `Vehicle` base class with a `protected speed` property, and a `Car` subclass that modifies speed.
-2. Implement a `UserAccount` class with a `#password` private field and a method to verify it.
+## Common Mistakes & Anti-Patterns
+- Relying solely on TS `private` for highly sensitive data in plain JS compiled output. Use `#private` for true runtime privacy.

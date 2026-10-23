@@ -1,51 +1,122 @@
-# Module 20: Typeof Type Operator
+# Module 20: Typeof Operator & Type Narrowing
 
-## Learning Objective
-Master the TypeScript `typeof` type operator for querying the type of an existing value and deriving types from runtime objects or constants.
+## What the Topic Is
+Runtime type checking and control flow analysis using JavaScript's `typeof` operator, `Array.isArray()`, and `instanceof`.
 
-## Target Audience
-Developers building type-safe configurations, constants, and data-driven typing in TypeScript.
+## Why It Matters
+TypeScript tracks runtime type checks to narrow down union and `unknown` types into specific, safe types automatically.
 
-## Prerequisites
-- Completion of [Module 17: Type Aliases](../17-type-aliases/README.md) and [Module 18: Interfaces vs. Type Aliases](../18-Interface-vs-Types/README.md).
-
----
-
-## Explanation in Simple Language
-In JavaScript, `typeof x` returns a string at runtime (like `"string"` or `"object"`). In TypeScript, when used in a **type position**, `typeof` inspects a JavaScript value and produces its exact TypeScript type. This allows you to "write the type once" based on a runtime constant or object.
-
----
-
-## Key Concepts & Rules
-1. **Type Query (`typeof value`)**: `const settings = { theme: 'dark', retries: 3 }; type AppSettings = typeof settings;`
-2. **Combining with `keyof`**: `type SettingKey = keyof typeof settings;` (`'theme' | 'retries'`)
-3. **Runtime vs Type Context**: TypeScript's `typeof` is erased at compile time and used purely for type checking.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-const DEFAULT_CONFIG = {
-    endpoint: "https://api.example.com",
-    timeout: 3000
-};
+// TypeScript Learning Example: Runtime Type Checking & Type Narrowing
+// This file demonstrates how TypeScript performs control flow analysis and type narrowing using `typeof`, `Array.isArray`, and `instanceof`.
 
-type ConfigType = typeof DEFAULT_CONFIG;
-// Equivalent to: { endpoint: string; timeout: number; }
+export {};
+
+// 1. Narrowing Primitive Types using `typeof`
+// TypeScript tracks runtime checks (like `typeof x === 'string'`) to narrow `unknown` or union types into specific types.
+function describeTypeof(x: unknown): string | number | boolean | bigint | symbol | undefined | (() => void) | null {
+    if (typeof x === 'string') {
+        // TypeScript narrows `x` to `string` inside this block
+        return 'string';
+    }
+
+    if (typeof x === 'number') {
+        // TypeScript narrows `x` to `number`
+        return 10;
+    }
+
+    if (typeof x === 'boolean') {
+        // TypeScript narrows `x` to `boolean`
+        return true;
+    }
+
+    if (typeof x === 'bigint') {
+        // TypeScript narrows `x` to `bigint`
+        return 'BigInt';
+    }
+
+    if (typeof x === 'symbol') {
+        // TypeScript narrows `x` to `symbol`
+        return 'symbol';
+    }
+
+    if (typeof x === 'undefined') {
+        // TypeScript narrows `x` to `undefined`
+        return 'undefined';
+    }
+
+    if (typeof x === 'function') {
+        // TypeScript narrows `x` to `Function`
+        return () => {};
+    }
+
+    if (x === null) {
+        // TypeScript narrows `x` to `null`
+        return null;
+    }
+
+    // Fallback for objects or other types
+    console.log(`type of array : ${typeof([1,3,4])}`);
+    
+    return 'object';
+}
+
+console.log(
+    describeTypeof('Hi'),
+    describeTypeof(23),
+    describeTypeof(true),
+    describeTypeof(10n),
+    describeTypeof(Symbol('sangam')),
+    describeTypeof(undefined),
+    describeTypeof(() => {}),
+    describeTypeof(null),
+    describeTypeof({}),
+);
+
+// 2. Narrowing Complex Types using `Array.isArray` and `instanceof`
+// Note: For non-primitives and objects, JavaScript's `typeof` operator returns `"object"`.
+// To narrow arrays and class instances, TypeScript supports built-in narrowing utilities like `Array.isArray()` and `instanceof`.
+function info(z: unknown): unknown {
+    if (Array.isArray(z)) {
+        // TypeScript narrows `z` to an array type
+        return z;
+    }
+
+    if (z instanceof Date) {
+        // TypeScript narrows `z` to `Date`
+        return new Date();
+    }
+
+    if (z instanceof Error) {
+        // TypeScript narrows `z` to `Error`
+        return new Error(`${z}`);
+    }
+
+    return 'other';
+}
+
+console.log(
+    info([1, 2, 3, 4, 5]),
+    info(new Date()),
+    info(new Error('oops! Error occured')),
+);
 ```
 
----
+## How the Code Works Line by Line
+1. **`typeof` Narrowing**: Checks runtime types of primitives (`string`, `number`, `boolean`, etc.).
+2. **`Array.isArray()`**: Distinguishes arrays from plain objects since `typeof []` returns `"object"`.
+3. **`instanceof`**: Narrows class instances like `Date` and `Error`.
 
-## Common Mistakes
-- Confusing JavaScript's runtime `typeof` operator with TypeScript's type-level `typeof` operator.
+## Expected Output
+```text
+type of array : object
+string 10 true BigInt symbol undefined [Function (anonymous)] null object
+[ 1, 2, 3, 4, 5 ]
+2026-10-23T...
+Error: oops! Error occured
+```
 
----
-
-## Practice Exercises
-1. Define a configuration object and use `typeof` to create a corresponding type alias.
-2. Combine `typeof` with `keyof` to create a union type of valid property names.
-
----
-
-## Course Conclusion
-You now understand how to leverage the `typeof` operator to bridge runtime constants and compile-time types!
+## Common Mistakes & Anti-Patterns
+- Expecting `typeof null` to return `"null"` (in JavaScript, `typeof null` historically returns `"object"`).
+- Expecting `typeof` to distinguish arrays from plain objects.

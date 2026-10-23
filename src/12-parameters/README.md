@@ -1,48 +1,118 @@
-# Module 12: Parameter and Return Type Annotations
+# Module 12: Parameter Annotations
 
-## Learning Objective
-Learn how to explicitly annotate function parameters and return types to build robust, self-documenting, and type-safe functions.
+## What the Topic Is
+Explicit function parameter and return type annotations, optional parameters, default parameters, object parameters, and special return types (`void`, `never`).
 
-## Target Audience
-Developers writing functions and APIs in TypeScript.
+## Why It Matters
+Annotating function parameters and return types ensures that callers supply correct arguments and prevents unintended return value changes.
 
-## Prerequisites
-- Completion of [Module 11: Tuples](../11-tuples/README.md).
-
----
-
-## Explanation in Simple Language
-Functions are the fundamental building blocks of JavaScript and TypeScript applications. By explicitly typing function parameters and return values, you document expected inputs and outputs while letting TypeScript prevent invalid calls before your code runs.
-
----
-
-## Key Concepts & Rules
-1. **Parameter Typing**: `function add(a: number, b: number): number`
-2. **Arrow Functions**: `const multiply = (a: number, b: number): number => a * b;`
-3. **Object Parameters**: Typing function parameters with object shapes or interfaces.
-4. **Void and Never**: Using `void` for functions with no meaningful return and `never` for functions that throw or loop indefinitely.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-function calculateTax(amount: number, rate: number = 0.05): number {
-    return amount * rate;
+// TypeScript Learning Example: Parameter and Return Type Annotations
+// Learn how to annotate function parameters and return types for better safety and documentation.
+
+export {};
+
+// 1. Basic Function with Parameter and Return Types
+// Always annotate parameters and return types for public or exported functions.
+function add(a: number, b: number): number {
+    return a + b;
 }
+
+// Calling the function
+console.log(add(5, 7)); // 12
+
+// 2. Functions with Multiple Parameter Types
+// Use union types when a parameter can accept more than one type.
+function formatInput(value: string | number): string {
+    if (typeof value === "number") {
+        return `Number: ${value}`;
+    }
+    return `Text: ${value.toUpperCase()}`;
+}
+
+console.log(formatInput(42));
+console.log(formatInput("hello"));
+
+// 3. Arrow Functions with Type Annotations
+// Arrow functions can also have explicit parameter and return type annotations.
+const timesTwo = (n: number): number => n * 2;
+console.log(timesTwo(8)); // 16
+
+// 4. Object Parameters
+// Define object shape using type alias or interface.
+type Point = {
+    x: number;
+    y: number;
+};
+
+// Function that takes a Point object and returns its distance from origin.
+function distanceFromOrigin(p: Point): number {
+    // Math.hypot calculates sqrt(x^2 + y^2)
+    return Math.hypot(p.x, p.y);
+}
+
+console.log(distanceFromOrigin({ x: 3, y: 4 })); // 5
+
+// 5. Optional Parameters
+// Use ? to mark a parameter as optional.
+// Optional parameters must come after required parameters.
+function greet(name: string, greeting?: string): string {
+    const msg = greeting ?? "Hello";
+    return `${msg}, ${name}!`;
+}
+
+console.log(greet("Alice"));
+console.log(greet("Bob", "Hi"));
+
+// 6. Default Parameters
+// Provide default values directly in the parameter list.
+function createUser(name: string, age: number = 0): { name: string; age: number } {
+    return { name, age };
+}
+
+console.log(createUser("Charlie"));        // { name: 'Charlie', age: 0 }
+console.log(createUser("Dana", 25));       // { name: 'Dana', age: 25 }
+
+// 7. Void Return Type
+// Use void for functions that do not return a meaningful value.
+function logMessage(msg: string): void {
+    console.log(`[LOG] ${msg}`);
+    // No return statement needed, or return undefined;
+}
+
+logMessage("This is a log message");
+
+// 8. Never Return Type
+// Use never for functions that never return (they always throw or loop infinitely).
+function throwError(message: string): never {
+    throw new Error(message);
+}
+
+// Uncommenting the next line will cause a runtime error:
+// throwError("Something went wrong");
 ```
 
----
+## How the Code Works Line by Line
+1. **Basic Parameters**: `add(a: number, b: number): number` enforces number inputs and output.
+2. **Union Parameters**: `formatInput(value: string | number)` uses `typeof` narrowing.
+3. **Optional Parameters**: `greeting?: string` makes an argument optional.
+4. **Default Parameters**: `age: number = 0` provides a fallback value.
+5. **`void` & `never`**: `void` for non-returning functions; `never` for error-throwing functions.
 
-## Common Mistakes
-- Omitting parameter annotations on public functions where inference isn't possible (e.g., untyped parameters default to `any` under implicitAny).
+## Expected Output
+```text
+12
+Number: 42
+Text: HELLO
+16
+5
+Hello, Alice!
+Hi, Bob!
+{ name: 'Charlie', age: 0 }
+{ name: 'Dana', age: 25 }
+[LOG] This is a log message
+```
 
----
-
-## Practice Exercises
-1. Write a function that takes a first name and last name (both strings) and returns a formatted full name.
-2. Write a function that accepts an object with `width` and `height` properties and returns the area.
-
----
-
-## Next Topic
-Proceed to [Module 13: Optional and Default Parameters](../13-optioanl-default/README.md).
+## Common Mistakes & Anti-Patterns
+- Placing required parameters after optional parameters (`?`) or default parameters in function signatures.

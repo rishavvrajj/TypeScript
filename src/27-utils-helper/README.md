@@ -1,44 +1,84 @@
 # Module 27: Conditional and Filtering Utility Types
 
-## Learning Objective
-Master advanced conditional and filtering utility types (`Exclude<T, U>`, `Extract<T, U>`, and `NonNullable<T>`) to precisely filter, refine, and shape union types.
+## What the Topic Is
+Filtering and refining union types using `Exclude<T, U>`, `Extract<T, U>`, and `NonNullable<T>`.
 
-## Target Audience
-Developers designing sophisticated type systems, event-driven architectures, or strict null-safety wrappers in TypeScript.
+## Why It Matters
+These utility types allow you to prune or extract specific subsets from union types without manually rewriting them.
 
-## Prerequisites
-- Completion of [Module 26: Function and Constructor Utility Types](../26-function-utils/README.md).
-
----
-
-## Explanation in Simple Language
-When working with union types, you often need to subtract certain types or pick only matching types:
-- **`Exclude<T, U>`**: Takes a union `T` and removes any types that are assignable to `U`. ("Exclude these types")
-- **`Extract<T, U>`**: Takes a union `T` and keeps only the types that are assignable to `U`. ("Extract only these types")
-- **`NonNullable<T>`**: Strips away `null` and `undefined` from a union type.
-
----
-
-## Key Concepts & Rules
-1. **Union Filtering**: Operates on union types distributively.
-2. **Event & Action Reductions**: Excellent for filtering specific UI events or API action strings.
-
----
-
-## Quick-Reference Code Examples
+## Complete Code Example
 ```typescript
-type AllEvents = "click" | "scroll" | "keydown" | "keyup";
-type MouseEvents = Extract<AllEvents, "click" | "scroll">; // "click" | "scroll"
-type NonKeyboardEvents = Exclude<AllEvents, "keydown" | "keyup">; // "click" | "scroll"
+// TypeScript Learning Example: Conditional and Filtering Utility Types
+// This file demonstrates how to use Exclude<T, U>, Extract<T, U>, and NonNullable<T>
+// to filter and refine union types.
+
+export {};
+
+// 1. Exclude<T, U>
+// Excludes from `T` all types that are assignable to `U`.
+type AllEventTypes = "click" | "submit" | "hover" | "keydown" | "keyup";
+
+// Exclude keyboard events from all events
+type MouseAndUIEventTypes = Exclude<AllEventTypes, "keydown" | "keyup">; // "click" | "submit" | "hover"
+
+function handleEvent(event: MouseAndUIEventTypes): void {
+    console.log(`Handling UI Event: ${event}`);
+}
+
+handleEvent('click');
+handleEvent('hover');
+handleEvent('submit');
+// handleEvent('keydown'); // Error: Argument of type '"keydown"' is not assignable to parameter of type 'MouseAndUIEventTypes'
+
+// 2. Extract<T, U>
+// Extracts from `T` all types that are assignable to `U` (retaining only the intersection).
+type CrudActions = "create" | "read" | "update" | "delete" | "patch";
+
+// Extract only mutating actions
+type MutatingActions = Extract<CrudActions, "create" | "update" | "delete">; // "create" | "update" | "delete"
+
+function handleAction(action: MutatingActions): void {
+    console.log(`Executing Mutating Action: ${action}`);
+}
+
+handleAction('create');
+handleAction('update');
+handleAction('delete');
+// handleAction('read'); // Error: Argument of type '"read"' is not assignable to parameter of type 'MutatingActions'
+
+// 3. NonNullable<T>
+// Constructs a type by excluding `null` and `undefined` from `T`.
+type MaybeValue = string | number | null | undefined;
+type CleanValue = NonNullable<MaybeValue>; // string | number
+
+function processValue(val: CleanValue): string {
+    if (typeof val === "number") {
+        return `Number value: ${val * 2}`;
+    }
+    return `String value: ${val} ${val}`;
+}
+
+console.log(processValue(10));
+console.log(processValue("hello"));
+// processValue(null); // Error: Argument of type 'null' is not assignable to parameter of type 'CleanValue'
 ```
 
----
+## How the Code Works Line by Line
+1. **`Exclude<T, U>`**: Removes types assignable to `U` from union `T`.
+2. **`Extract<T, U>`**: Keeps only types assignable to `U` from union `T`.
+3. **`NonNullable<T>`**: Strips `null` and `undefined` from union `T`.
 
-## Common Mistakes
-- Confusing `Exclude` (subtracting types) with `Extract` (keeping intersecting types).
+## Expected Output
+```text
+Handling UI Event: click
+Handling UI Event: hover
+Handling UI Event: submit
+Executing Mutating Action: create
+Executing Mutating Action: update
+Executing Mutating Action: delete
+Number value: 20
+String value: hello hello
+```
 
----
-
-## Practice Exercises
-1. Given a union of status strings `"pending" | "approved" | "rejected" | "archived"`, use `Exclude` to remove `"archived"`.
-2. Use `NonNullable` to clean a union type that includes `string | null | undefined`.
+## Common Mistakes & Anti-Patterns
+- Confusing `Exclude` (removing items) with `Extract` (retaining items).
